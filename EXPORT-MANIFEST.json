@@ -1,0 +1,61 @@
+{
+  "purpose": "Sanitized code-only snapshot; not a live deployment",
+  "source_scope": "casting-data/scripts/*.py only",
+  "sanitization": [
+    "Synthetic actor/group identifiers",
+    "Synthetic numeric source IDs and historical seed campaigns",
+    "Relative synthetic automation fixture",
+    "No operational records or private documents copied",
+    "Live-record regression replaced with equivalent synthetic terminal cases"
+  ],
+  "files": [
+    {
+      "path": "scripts/collector-health.py",
+      "sha256": "12800b5def45024f699716d633075634f4a7f6f0b53041907289ac6b851aff2d"
+    },
+    {
+      "path": "scripts/collector-slot.py",
+      "sha256": "5cd266b93604ba1521455ec4aa089de30b5878591319c44c1158184a5bda0e31"
+    },
+    {
+      "path": "scripts/hourly-checkpoint.py",
+      "sha256": "36b3596918602e1aed80f8d8669b603b00d4a05056287d1f1f401df955b887c9"
+    },
+    {
+      "path": "scripts/lead-triage.py",
+      "sha256": "99b8b34bbc8eb517cf5890ab143de0433b9ef4e511b6537e70cee2af3f915583"
+    },
+    {
+      "path": "scripts/manual_collector_lease.py",
+      "sha256": "459d4622c5803460f10d0021853a9e81f7f5195cdaf4aa0334918d6c11febe27"
+    },
+    {
+      "path": "scripts/notification_guard.py",
+      "sha256": "4e7a467bcab3974356ff82b16926f749ea40d383755f6b5c8306775a733db3b3"
+    },
+    {
+      "path": "scripts/test_collector_health.py",
+      "sha256": "59aa708ad00924f19425bd426ff5d73270d9d5abef6849fd95667187757117cd"
+    },
+    {
+      "path": "scripts/test_lead_triage.py",
+      "sha256": "a2020a1fd8ff06cde2aa83b372d71a36bdb8bab11b38826ea2decba94450b610"
+    },
+    {
+      "path": "scripts/test_manual_collector_lease.py",
+      "sha256": "d5c62d70f0c431fef69ac0950334e1c3f5565c02944a9dfac413302e1200d04d"
+    },
+    {
+      "path": "scripts/test_notification_guard.py",
+      "sha256": "710f013b2141be1d22e70e042d7026f6e1f4e0f45f7fb755393ef40e170caaa8"
+    },
+    {
+      "path": "scripts/test_work_cycle.py",
+      "sha256": "eea0dae0eb1b4cb8123c634a5740f049f12f381c17ea36e7c7713b568ac80ad8"
+    },
+    {
+      "path": "scripts/work_cycle.py",
+      "sha256": "a614ba91e9f006b67f7c3ea9a507d34ed19b3d1021d7583d4f2e3ef03fc7c4e3"
+    }
+  ]
+}

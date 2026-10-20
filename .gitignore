@@ -1,0 +1,21 @@
+# Code-only export: never add operational state or media.
+__pycache__/
+*.py[cod]
+.venv/
+.env*
+*.pem
+*.key
+*.lock
+*-state.json
+*receipts*.json
+*authorizations*.json
+notification-state.json
+reviews/
+private/
+assets/
+comp-cards/
+*.png
+*.jpg
+*.jpeg
+*.mp4
+.DS_Store
