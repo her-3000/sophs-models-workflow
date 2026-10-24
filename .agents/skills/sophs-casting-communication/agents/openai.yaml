@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sophs casting communication"
+  short_description: "Draft truthful casting enquiries and replies"
+  default_prompt: "Use $sophs-casting-communication to draft a source-checked casting enquiry without sending it."

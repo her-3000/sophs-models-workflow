@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Reviewed private Sophs handoff, version 1",
+  "description": "Private-only contract. Semantic validation is implemented by scripts/portable_handoff.py. This schema contains no operational data.",
+  "type": "object",
+  "required": ["schema_version", "kind", "export_id", "generated_at", "authority", "paused", "coverage", "sources", "sop", "profile", "asset", "contact", "template", "preferences", "campaigns", "steps", "holds", "attempts", "checkpoint"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "COMPLETE_PRIVATE_HANDOFF"},
+    "export_id": {"type": "string", "minLength": 1},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "authority": {"const": "local_os"},
+    "paused": {"const": true},
+    "coverage": {
+      "type": "object",
+      "required": ["complete", "reconciled", "counts"],
+      "properties": {
+        "complete": {"const": true},
+        "reconciled": {"const": true},
+        "counts": {
+          "type": "object",
+          "required": ["campaigns", "steps", "holds", "attempts"],
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}},
+    "sop": {"$ref": "#/$defs/document"},
+    "profile": {"$ref": "#/$defs/document"},
+    "asset": {"$ref": "#/$defs/document"},
+    "contact": {
+      "type": "object",
+      "required": ["revision", "kind", "url", "verified"],
+      "properties": {"revision": {"type": "string"}, "kind": {"const": "personal_line"}, "url": {"type": "string"}, "verified": {"const": true}}
+    },
+    "template": {"$ref": "#/$defs/document"},
+    "preferences": {"type": "object", "required": ["paid_mv_required"], "properties": {"paid_mv_required": {"const": true}}},
+    "campaigns": {"type": "array", "items": {"$ref": "#/$defs/record"}},
+    "steps": {"type": "array", "items": {"$ref": "#/$defs/record"}},
+    "holds": {"type": "array", "items": {"$ref": "#/$defs/record"}},
+    "attempts": {"type": "array", "items": {"$ref": "#/$defs/record"}},
+    "checkpoint": {"type": "object", "required": ["revision", "reconciled", "inflight"], "properties": {"revision": {"type": "string"}, "reconciled": {"const": true}, "inflight": {"const": false}}}
+  },
+  "$defs": {
+    "source": {"type": "object", "required": ["name", "sha256"], "properties": {"name": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}},
+    "document": {"type": "object", "required": ["revision", "approved", "path", "sha256"], "properties": {"revision": {"type": "string", "minLength": 1}, "approved": {"const": true}, "path": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "contact_revision": {"type": "string", "minLength": 1}, "communication": {"$ref": "#/$defs/communication"}}},
+    "communication": {
+      "type": "object",
+      "required": ["skill_revision", "language", "message_kind", "language_evidence", "sop_sha256", "agency_identity_verified", "claims_reviewed"],
+      "properties": {
+        "skill_revision": {"const": 1},
+        "language": {"enum": ["th", "en"]},
+        "brief_language": {"type": ["string", "null"]},
+        "recipient_language": {"type": ["string", "null"]},
+        "contextual_language": {"enum": ["th", "en"]},
+        "message_kind": {"enum": ["initial_interest", "follow_up", "missing_info"]},
+        "language_evidence": {"type": "string", "minLength": 1},
+        "sop_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "agency_identity_verified": {"const": true},
+        "claims_reviewed": {"const": true}
+      }
+    },
+    "record": {
+      "type": "object",
+      "required": ["key", "campaign_key", "source_url", "aliases", "status", "reason", "evidence", "receipt"],
+      "properties": {
+        "key": {"type": "string", "minLength": 1},
+        "campaign_key": {"type": "string", "minLength": 1},
+        "source_url": {"type": "string", "minLength": 1},
+        "aliases": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "status": {"enum": ["known_unsent", "completed", "held", "uncertain", "intent"]},
+        "reason": {"type": "string", "minLength": 1},
+        "evidence": {"type": "string", "minLength": 1},
+        "receipt": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

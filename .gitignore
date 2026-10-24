@@ -19,3 +19,11 @@ comp-cards/
 *.jpeg
 *.mp4
 .DS_Store
+# Machine-local migration observations may contain private references.
+/migration/
+/handoff-private/
+handoff.json
+handoff-state.json
+candidate.json
+outcome.json
+private-operational-*.json

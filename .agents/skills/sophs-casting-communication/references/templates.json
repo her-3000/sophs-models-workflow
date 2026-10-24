@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "skill_revision": 1,
+  "warning": "Draft shapes only. Resolve from reviewed private facts; unresolved placeholders must never pass preflight.",
+  "en": {
+    "initial_interest": "I'd like to put {{PRIVATE_MODEL_NAME}} forward for {{PRIVATE_ROLE}}. She is {{PRIVATE_AGE}} years old. {{PRIVATE_RELEVANT_STRENGTHS}} {{PRIVATE_ESSENTIAL_QUESTION}}\n{{PRIVATE_PERSONAL_LINE_URL}}",
+    "follow_up": "Following up on {{PRIVATE_VERIFIED_THREAD_CONTEXT}}: {{PRIVATE_ANSWER_OR_ESSENTIAL_QUESTION}}\n{{PRIVATE_PERSONAL_LINE_URL}}",
+    "missing_info": "For {{PRIVATE_ROLE}}, could you confirm {{PRIVATE_ESSENTIAL_MISSING_DETAIL}}?\n{{PRIVATE_PERSONAL_LINE_URL}}"
+  },
+  "th": {
+    "initial_interest": "ขอเสนอ {{PRIVATE_MODEL_NAME}} สำหรับบท {{PRIVATE_ROLE}} อายุ {{PRIVATE_AGE}} ปี {{PRIVATE_RELEVANT_STRENGTHS}} {{PRIVATE_ESSENTIAL_QUESTION}}\n{{PRIVATE_PERSONAL_LINE_URL}}",
+    "follow_up": "ขอติดตามเรื่อง {{PRIVATE_VERIFIED_THREAD_CONTEXT}}: {{PRIVATE_ANSWER_OR_ESSENTIAL_QUESTION}}\n{{PRIVATE_PERSONAL_LINE_URL}}",
+    "missing_info": "สำหรับบท {{PRIVATE_ROLE}} ขอสอบถาม {{PRIVATE_ESSENTIAL_MISSING_DETAIL}}\n{{PRIVATE_PERSONAL_LINE_URL}}"
+  }
+}
