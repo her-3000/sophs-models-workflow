@@ -91,6 +91,26 @@ class HandoffTests(unittest.TestCase):
             with self.assertRaises(h.Hold): self.run_command(expected_host='wrong-host')
             with self.assertRaises(h.Hold): self.run_command(root_path=str(h.REPO))
 
+    def test_workflow_and_private_state_are_siblings_not_ancestor_roots(self):
+        checkout = self.root / 'Workflow'; checkout.mkdir()
+        private = self.root / 'PrivateState'; private.mkdir()
+        with patch.object(h, 'REPO', checkout):
+            with self.assertRaisesRegex(h.Hold, 'private_root_overlaps_code'):
+                h.private_root(str(self.root), self.host)
+            self.assertEqual(h.private_root(str(private), self.host), private)
+
+    def test_setup_docs_and_manifest_describe_current_package_discovery(self):
+        readme = (h.REPO / 'README.md').read_text()
+        self.assertIn("--private-root '/workspace/shared/Sophs Models/PrivateState'", readme)
+        self.assertIn('--manifest-file operational-projection-2026-10-25.json', readme)
+        self.assertNotIn("--private-root '/workspace/shared/Sophs Models'", readme)
+        self.assertIn('not a claim that the card is missing', readme)
+        manifest = json.loads((h.REPO / 'EXPORT-MANIFEST.json').read_text())
+        self.assertEqual(manifest['scope_kind'], 'historical_baseline')
+        self.assertEqual(manifest['current_package_discovery']['published_files'],
+                         'git ls-tree -r --name-only HEAD')
+        self.assertEqual(len(manifest['files']), 12)
+
     def test_partial_projection_unknown_and_empty_ledgers_fail_closed(self):
         original = deepcopy(self.doc)
         for change in ['partial', 'projection', 'counts', 'unknown', 'empty', 'source', 'inflight']:

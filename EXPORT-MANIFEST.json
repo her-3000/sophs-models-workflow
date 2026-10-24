@@ -1,6 +1,14 @@
 {
-  "purpose": "Sanitized code-only snapshot; not a live deployment",
-  "source_scope": "casting-data/scripts/*.py only",
+  "purpose": "Historical sanitized code-only baseline; not a live deployment or current package allowlist",
+  "scope_kind": "historical_baseline",
+  "baseline_commit": "bec6755b44d6f2610cfcc8b1404d0894cffc80de",
+  "source_scope": "Historical casting-data/scripts/*.py export only; original 12 hashes preserved",
+  "current_package_discovery": {
+    "published_files": "git ls-tree -r --name-only HEAD",
+    "published_revision": "git rev-parse HEAD",
+    "development_tracked_files": "git ls-files",
+    "boundary": "Use the pinned published Git tree for the complete current code/docs/skill package; private state and assets are excluded."
+  },
   "sanitization": [
     "Synthetic actor/group identifiers",
     "Synthetic numeric source IDs and historical seed campaigns",

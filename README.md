@@ -56,18 +56,33 @@ call is needed. First run the offline tests from repository root:
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts -p 'test_*.py'
 ```
 
-The intended Mia private folder is `/workspace/shared/Sophs Models` on a
-**different host**. A matching path string in Codex is not shared storage.
+Mia uses sibling directories on a **different host**:
+
+- Code: `/workspace/shared/Sophs Models/Workflow`
+- Private export/state: `/workspace/shared/Sophs Models/PrivateState`
+- Approved card bytes: `/workspace/shared/Sophs Models/Assets`
+
+Use `PrivateState` as the private root, never their parent `Sophs Models`:
+the ancestry guard correctly rejects a private root containing the checkout.
+A matching path string in Codex is not shared storage.
 Obtain the actual execution-host identity, reviewed export ID and SHA-256 of
-`handoff.json` through the authorized handoff. Supply them explicitly; do not
+the selected private JSON file through the authorized handoff. Supply them explicitly; do not
 guess host identity from this checkout. Verify permission and filesystem
 mapping on the target host, then use the read-only import validator:
 
 ```sh
 python3 scripts/portable_handoff.py validate-import \
-  --private-root "$SOPHS_PRIVATE_ROOT" --expected-host "$SOPHS_EXPECTED_HOST" \
+  --private-root '/workspace/shared/Sophs Models/PrivateState' \
+  --manifest-file operational-projection-2026-10-25.json \
+  --expected-host "$SOPHS_EXPECTED_HOST" \
   --manifest-sha256 "$SOPHS_EXPORT_SHA256" --export-id "$SOPHS_EXPORT_ID"
 ```
+
+Run this from the verified `Workflow` checkout on Mia, with the hash of that
+exact private file. For another approved host/layout, pass its explicitly
+verified sibling private root and actual relative filename instead. The future
+complete handoff defaults to `handoff.json`; the current projection filename
+must be selected explicitly as above.
 
 Unset/wrong arguments, wrong host, missing files, hash mismatch, stale evidence,
 partial coverage, unknown statuses or missing receipt context produce a hold.
@@ -84,6 +99,33 @@ diagnostics and no candidate clearance. It preserves the original projection
 without normalization or ledger writes. Partial coverage and a missing verified
 personal LINE URL are explicit blockers. It does not assume card metadata means
 card bytes are present on this host.
+
+The parent independently verified the approved card bytes on Mia in `Assets`.
+That is separate evidence from this projection, which does not include bytes
+and may retain an original-host reference. The adapter's separate-verification
+blocker is not a claim that the card is missing on Mia. A reviewed mapping to
+the verified asset is still pending. Keep the private-path containment guard:
+do not use `../Assets`, a symlink escape or the common parent as private root.
+Before a complete handoff can pass, establish an authorized contained asset
+mapping/copy with verified bytes/hash in the selected private root; this command
+does not copy or remap assets automatically.
+
+### Discover the whole published package
+
+`EXPORT-MANIFEST.json` retains the **historical 12-script baseline** and its
+original hashes. It is not a current deployment allowlist and must not be used
+to omit the portable entrypoint, schema, root instructions or communication
+skill. On the verified pinned checkout, discover the complete published tree:
+
+```sh
+git rev-parse HEAD
+git ls-tree -r --name-only HEAD
+```
+
+`git ls-files` shows the current tracked/index inventory during development;
+the immutable committed tree above defines published files. Neither command
+includes ignored private state, assets or machine-local migration observations.
+Do not add private files to the baseline manifest or infer readiness from it.
 
 The future **complete** private format v1 is defined by `schemas/private-handoff-v1.json` and the
 entrypoint's semantic checks. `handoff.json` binds approved SOP/profile/asset/
@@ -203,4 +245,6 @@ A separately authorized local executor supplies real machine/account context, cu
 
 Tests cover ownership conflicts, unknown guards, uncertain-send protection, terminal evidence, interrupted recovery, separate screening/review/action clocks, quota checks and duplicate delivery. Passing tests establish local behavior; they do not prove platform access, complete source coverage, delivery or human reading.
 
-See [WORKFLOW.md](WORKFLOW.md) for operation and [EXPORT-MANIFEST.json](EXPORT-MANIFEST.json) for the explicit code allowlist.
+See [WORKFLOW.md](WORKFLOW.md) for evidence boundaries and
+[EXPORT-MANIFEST.json](EXPORT-MANIFEST.json) for historical baseline hashes;
+use the published Git tree discovery above for the complete current package.
