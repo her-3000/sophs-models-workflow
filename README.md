@@ -1,250 +1,147 @@
-# Soph’s Models casting workflow
+# Soph's Models casting workflow
 
-## Start here: portable handoff
+This repository is the file-based casting coordinator for Soph's Models: sanitized Python tools, docs, a communication skill, and offline regression tests. It is a source backup and local test harness. It does not send messages, browse, or run a schedule by itself.
 
-Codex is the primary daily driver for building, maintaining and troubleshooting
-this workflow and helping set up other software. Orca and DeepSeek Harness are
-optional supporting interfaces; neither is required for the Codex happy path.
-Each agent should read this file explicitly after `AGENTS.md`. The entrypoint
-is `scripts/portable_handoff.py`. It performs
-file-only checks and journals outcomes; it has no browser, message, model API,
-task dispatch or scheduler adapter. Existing coordinator scripts and history
-remain available for regression testing, not automatic execution.
+Read `AGENTS.md` first, then this file. Before drafting any casting caption or reply, read `.agents/skills/sophs-casting-communication/SKILL.md`. A passing test, a prepared caption, or this README does not permit browsing, sending, resuming a schedule, or clearing a hold. Missing private data means hold.
 
-Before drafting, load the reusable
-[casting communication skill](.agents/skills/sophs-casting-communication/SKILL.md).
-It carries source-based Thai/English selection, representative voice, initial
-interest versus follow-up, essential questions, truthful facts, materials,
-contact-link policy and commitment boundaries, with sanitized draft templates.
+GitHub repository: [her-3000/sophs-models-workflow](https://github.com/her-3000/sophs-models-workflow). Default branch: `main`. GitHub description, checked 2026-11-04: "Sanitized casting coordination workflow and offline regression tests".
 
-Git contains sanitized code, documentation and synthetic tests only. Actual
-SOP, verified profile facts, approved card bytes/metadata, contact/template,
-eligibility evidence, organiser history, deduplication and receipts belong in
-a separately reviewed private export outside this checkout. Never commit them.
-Do not copy the earlier 23-file test bundle over this repository: it excluded
-the private ledgers/profile/card/template/pay preferences and is not an import.
+## Who it is for
 
-Local OS remains authoritative until a complete checked minimal-state import
-and an explicit owner migration decision. A cloud journal must be reconciled
-back into that authority before another executor acts. No automatic two-way
-sync or ownership transfer exists. Recurring casting remains paused; a manual
-exception does not clear holds or activate recurring work.
+The project brief names the owner as Cal, GitHub account `her-3000`, and the collaborator as Sophie, GitHub account `sst11-99`.
 
-### Current safe checkpoint and attempt history
+Checked against GitHub on 2026-11-04:
 
-- Baseline source: `bec6755b44d6f2610cfcc8b1404d0894cffc80de`.
-- Earlier reviewed local-origin candidate: 23 files; independently passed 100
-  synthetic cloud tests. Projected checkpoint is non-runtime evidence only.
-- Parent reports one manual Linux Facebook initial enquiry succeeded with an
-  approved card after local SOP/asset/dedup consultation. Its 10m21s wall time
-  includes waits; no timing breakdown or efficiency claim is established.
-- That experiment proves one UI path, not sustained sessions, Orca execution,
-  DeepSeek inference, complete migration or production readiness. Actual
-  attempt identity/receipt must arrive in the reviewed private export.
-- Historical uncertainties remain no-replay holds. Older campaign/hold counts
-  are not current truth. This checkout supplies no authoritative current counts.
-- The exact verified personal LINE share URL is still missing here. Relevant
-  preflight holds until supplied and verified; never derive a URL or substitute
-  business LINE. The one test exception does not change normal paid-MV preference.
+- `her-3000` is the admin on this repository. That account's public name field is `her`. The two newest commits in this history are authored by Callum Runnerstrum. The oldest commit is authored as Workflow Export. No file names a person Cal. `CalMessenger` in `scripts/collector-health.py` is a route label. The short name Cal is from the brief.
+- The GitHub user `sst11-99` exists. The collaborator list returned for this repository contained only `her-3000`. Sophie as a collaborator on this repo is unverified. Script labels such as `complete-sophie` and the fixture thread id `fixture-casting-thread` are local workflow names, not that GitHub account.
 
-### Setup, validation and resume
+Soph's Models' public website is a different repository, [her-3000/modeling-company](https://github.com/her-3000/modeling-company). GitHub describes it as "Minimal modeling company application prototype" and records its homepage as https://sophsmodel.vercel.app/. A request to that URL on 2026-11-04 returned HTTP 200 from Vercel. This workflow tree does not mention that repository or URL. The "part of Soph's Models" relationship is the project brief plus those checks.
 
-Use installed Python 3.11+ on Unix; no install, credential creation or model
-call is needed. First run the offline tests from repository root:
+Coding agents that maintain this checkout are the other audience. `AGENTS.md` names Codex as the main daily driver and Orca and DeepSeek Harness as optional. This session did not check whether those tools are installed.
+
+## Repository status
+
+GitHub reported this repository as public (`visibility` PUBLIC, `isPrivate` false) on 2026-11-04. It is about to become private. That change was not applied in this checkout. After it happens, cloning will require access. Keep treating the tree as code, docs, and synthetic tests only. Private SOP, profile facts, card bytes, contact templates, ledgers, receipts, and credentials stay outside git. `.gitignore` already ignores `.env*`, private directories, state JSON, receipts, authorizations, and image/video files.
+
+## What is in this checkout
+
+Tracked paths (`git ls-files`):
+
+| Path | Role |
+| --- | --- |
+| `AGENTS.md` | Short agent entry. Points at this README, `scripts/portable_handoff.py`, and the casting skill. |
+| `README.md` | This briefing. |
+| `WORKFLOW.md` | Deidentified operating principles and evidence boundaries. It says it is not a copy of private rules. |
+| `EXPORT-MANIFEST.json` | Historical code-only baseline. `scope_kind` is `historical_baseline`. It records 12 script hashes from commit `bec6755b44d6f2610cfcc8b1404d0894cffc80de`. It is not a deployment allowlist and it omits the portable handoff, schema, skill, and root docs. Current published files are `git ls-tree -r --name-only HEAD`. |
+| `config/automation.example.toml` | Synthetic schedule fixture. Its own comment says reading the file installs or runs nothing. `collector-slot.py` can parse this shape of RRULE when `next-slot` is invoked. Nothing in the repo registers cron or a cloud scheduler from it. `status = "ACTIVE"` is fixture text. |
+| `schemas/private-handoff-v1.json` | JSON Schema draft 2020-12 for a complete private handoff (`kind` `COMPLETE_PRIVATE_HANDOFF`, `schema_version` 1). Semantic checks live in `scripts/portable_handoff.py`. The schema file has no operational records. |
+| `.agents/skills/sophs-casting-communication/SKILL.md` | Rules for Thai/English casting drafts: initial interest, follow-up, and missing-info questions. Grants no send permission. |
+| `.agents/skills/sophs-casting-communication/agents/openai.yaml` | Skill display metadata for an OpenAI-style agent host. |
+| `.agents/skills/sophs-casting-communication/references/templates.json` | Sanitized draft shapes. Placeholders such as `{{PRIVATE_PERSONAL_LINE_URL}}` stay unresolved in git. |
+| `.gitignore` | Excludes operational state, env files, media, and private paths. |
+| `scripts/*.py` | Coordinator CLIs and unittest modules. Details below. |
+
+`scripts/portable_handoff.py` is the entrypoint an agent should use for import checks and outcome journaling. It is file-only. Its docstring says it never operates a UI or sends. Commands: `validate-import`, `preflight`, `final-check`, `record-result`. Required flags: `--private-root`, `--expected-host`, `--manifest-sha256`, `--export-id`. Optional: `--manifest-file` (default `handoff.json`), `--candidate`, `--contact-revision`, `--outcome`. `--expected-host` must equal `os.uname().nodename` before any private read. The private root must be an absolute, non-symlink directory, must not be `/`, and must not contain or sit inside this checkout.
+
+Other coordinator scripts, from their docstrings and `argparse` choices:
+
+| Script | What it does | Commands |
+| --- | --- | --- |
+| `scripts/hourly-checkpoint.py` | Atomic owner-local run guard and campaign receipt journal. No network or UI. Loads `work_cycle.py` and `manual_collector_lease.py` beside itself. | `begin`, `finish`, `campaign`, `campaign-step`, `source`, `post`, `lease-begin`, `lease-finish` |
+| `scripts/work_cycle.py` | File-only phase handoff between local Sophie and Upwork labels. Uses the desktop lock. Never sends. | `init`, `view`, `complete-sophie`, `complete-upwork`, `refresh-window`, `claim-dispatch`, `dispatch-result` |
+| `scripts/manual_collector_lease.py` | One-use manual lease checks. No CLI. `hourly-checkpoint.py` imports it. | (library) |
+| `scripts/lead-triage.py` | File-only lead budgets and dispositions. No UI, network, or sending. | `start`, `classify`, `check`, `review-wait`, `review-result`, `action-start`, `dispose`, `view` |
+| `scripts/collector-health.py` | Owner-local evidence probe. No UI, network, sends, recovery execution, or unlocks. | `probe`, `record`, `claim-recovery`, `seed-queue`, `read-queue`, `claim-lead`, `lead-outcome`, `defer-lead` |
+| `scripts/collector-slot.py` | Atomic slot admission and a one-attempt digest journal. No network, UI, or sleep. | `acquire`, `report-intent`, `finish`, `next-slot` |
+| `scripts/notification_guard.py` | File-only notification admission and receipts. Docstring: never contacts LINE. | `view`, `quota-claim`, `quota-result`, `prepare`, `result` |
+
+Tests: `scripts/test_collector_health.py`, `scripts/test_lead_triage.py`, `scripts/test_manual_collector_lease.py`, `scripts/test_notification_guard.py`, `scripts/test_portable_handoff.py`, `scripts/test_work_cycle.py`. They use temporary directories and synthetic records.
+
+Several CLIs default `--root` to the repository directory (`Path(__file__).resolve().parents[1]`). Invoking a writer with that default can create JSON state in the checkout. Use a temporary directory when you are only inspecting behavior. `notification_guard.py` uses the same default.
+
+## Tech stack
+
+- Language: Python. `collector-slot.py` and `work_cycle.py` import `tomllib`, which is in the standard library from Python 3.11 onward. This session ran the tests with Python 3.12.3. Python 3.11 itself was not executed here.
+- Libraries: standard library only. Imports seen in `scripts/` are `argparse`, `contextlib`, `datetime`, `fcntl`, `hashlib`, `hmac`, `importlib`, `json`, `os`, `pathlib`, `re`, `tempfile`, `tomllib`, `unittest`, `urllib.parse`, `uuid`, and `zoneinfo`. No `requirements.txt`, `pyproject.toml`, `package.json`, or lockfile is in the tree.
+- OS: Unix-like. The tools use `fcntl` file locks. Windows was not tested.
+- Data: JSON files under a chosen root, plus the TOML schedule fixture. `work_cycle.py`, `collector-slot.py`, and `notification_guard.py` use timezone `Asia/Bangkok`.
+- Schema check: `portable_handoff.py` implements its own `shape()` walk of `schemas/private-handoff-v1.json`. The `jsonschema` package is not imported.
+- Interfaces named in code, with no client library in the tree: Facebook and Instagram HTTPS identity parsing, a LINE contact kind in the handoff schema, local Sophie/Upwork phase labels, and notification text that must end with a `- Mia` suffix in `notification_guard.py`. Those names are not connected accounts.
+
+## Install
+
+There is no install step in the repo. Do not pip install anything for the tests. Confirm the interpreter:
+
+```sh
+python3 --version
+```
+
+Verified here: `Python 3.12.3`. Need 3.11 or newer because of `tomllib`. Script files are mode `644`, so call them with `python3` even where a `#!/usr/bin/env python3` shebang is present.
+
+## Run and test
+
+Run commands from the repository root.
+
+Verified on 2026-11-04 in this environment (97 tests, OK), both of these:
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts -p 'test_*.py'
+python3 -m unittest discover -s scripts -p 'test_*.py'
 ```
 
-Mia uses sibling directories on a **different host**:
+`python3 -m unittest discover -s scripts` puts `scripts/` on the import path. That is why tests can import `portable_handoff`, `work_cycle`, and `notification_guard`. This session did not re-run discovery from another working directory.
 
-- Code: `/workspace/shared/Sophs Models/Workflow`
-- Private export/state: `/workspace/shared/Sophs Models/PrivateState`
-- Approved card bytes: `/workspace/shared/Sophs Models/Assets`
+Safe CLI inspection, also verified (each `--help` exited 0):
 
-Use `PrivateState` as the private root, never their parent `Sophs Models`:
-the ancestry guard correctly rejects a private root containing the checkout.
-A matching path string in Codex is not shared storage.
-Obtain the actual execution-host identity, reviewed export ID and SHA-256 of
-the selected private JSON file through the authorized handoff. Supply them explicitly; do not
-guess host identity from this checkout. Verify permission and filesystem
-mapping on the target host, then use the read-only import validator:
+```sh
+python3 scripts/portable_handoff.py --help
+python3 scripts/hourly-checkpoint.py --help
+python3 scripts/work_cycle.py --help
+python3 scripts/collector-health.py --help
+python3 scripts/lead-triage.py --help
+python3 scripts/collector-slot.py --help
+python3 scripts/notification_guard.py --help
+```
+
+`python3 scripts/portable_handoff.py` with no arguments exited 2 and named the required flags. A `validate-import` call with a host string that does not match this machine returned `{"ok": false, "status": "hold", "hold_code": "host_not_verified", "execution_permitted": false}` and exited 2. That check used no private export.
+
+The regression test in `scripts/test_portable_handoff.py` locks this documented example. It was not executed here. It needs a verified host, a reviewed private export, and sibling directories that are not in this checkout. Whether a host still has those directories is unverified.
 
 ```sh
 python3 scripts/portable_handoff.py validate-import \
   --private-root '/workspace/shared/Sophs Models/PrivateState' \
   --manifest-file operational-projection-2026-10-25.json \
   --expected-host "$SOPHS_EXPECTED_HOST" \
-  --manifest-sha256 "$SOPHS_EXPORT_SHA256" --export-id "$SOPHS_EXPORT_ID"
+  --manifest-sha256 "$SOPHS_EXPORT_SHA256" \
+  --export-id "$SOPHS_EXPORT_ID"
 ```
 
-Run this from the verified `Workflow` checkout on Mia, with the hash of that
-exact private file. For another approved host/layout, pass its explicitly
-verified sibling private root and actual relative filename instead. The future
-complete handoff defaults to `handoff.json`; the current projection filename
-must be selected explicitly as above.
+Use `PrivateState` as the private root. The code rejects a private root that contains this checkout. Supply the real host nodename, the SHA-256 of the selected private JSON file, and the export id. Do not guess them from this repo. The shell names above are only placeholders in the example. Python never reads them.
 
-Unset/wrong arguments, wrong host, missing files, hash mismatch, stale evidence,
-partial coverage, unknown statuses or missing receipt context produce a hold.
-The validator never creates an empty ledger or imports a projected checkpoint.
-It does not move files: approved transfer and complete export reconciliation
-must precede it. Source digests are reviewed export attestations, not proof
-that this host has inspected the original OS records.
+`validate-import` on a `sophs-private-operational-projection` v1 document is read-only. It returns hold, does not write a ledger, and sets `execution_permitted` to false. If `approved_card.bytes_included` is not true, the blocker is `approved_asset_requires_separate_local_byte_verification`. That blocker is not a claim that the card is missing on a named host. The projection does not carry card bytes; a separate local byte check is still required. This checkout does not include those bytes.
 
-The currently supplied `sophs-private-operational-projection` v1 has a dedicated
-read-only adapter. Pass its actual relative filename using `--manifest-file`.
-The adapter checks the pinned bytes, embedded schema digest, record sections,
-counts, paused authority and protection inventory; it returns HOLD with minimal
-diagnostics and no candidate clearance. It preserves the original projection
-without normalization or ledger writes. Partial coverage and a missing verified
-personal LINE URL are explicit blockers. It does not assume card metadata means
-card bytes are present on this host.
+The future complete file is `handoff.json`, defined by `schemas/private-handoff-v1.json`. The schema requires `paused` true, `authority` `local_os`, and a verified personal LINE contact. The projection adapter also requires `all_schedules_paused` true and `resume_or_send_authorization` false. Individual CLIs do not share one global pause flag. Do not treat a successful unittest run as permission to call them against live state.
 
-The parent independently verified the approved card bytes on Mia in `Assets`.
-That is separate evidence from this projection, which does not include bytes
-and may retain an original-host reference. The adapter's separate-verification
-blocker is not a claim that the card is missing on Mia. A reviewed mapping to
-the verified asset is still pending. Keep the private-path containment guard:
-do not use `../Assets`, a symlink escape or the common parent as private root.
-Before a complete handoff can pass, establish an authorized contained asset
-mapping/copy with verified bytes/hash in the selected private root; this command
-does not copy or remap assets automatically.
+## Backend and environment
 
-### Discover the whole published package
+This repository has no Supabase usage. There is no Supabase project URL, project ref, table, database function, or edge function in the tree, and no Supabase client or config directory.
 
-`EXPORT-MANIFEST.json` retains the **historical 12-script baseline** and its
-original hashes. It is not a current deployment allowlist and must not be used
-to omit the portable entrypoint, schema, root instructions or communication
-skill. On the verified pinned checkout, discover the complete published tree:
+There is no other hosted backend. No database URL, HTTP client, or `os.environ` / `getenv` usage appears in the Python. Tests need no environment variables.
 
-```sh
-git rev-parse HEAD
-git ls-tree -r --name-only HEAD
-```
+`.gitignore` ignores files matching `.env*`. No env file is committed. None is required to run the tests.
 
-`git ls-files` shows the current tracked/index inventory during development;
-the immutable committed tree above defines published files. Neither command
-includes ignored private state, assets or machine-local migration observations.
-Do not add private files to the baseline manifest or infer readiness from it.
+Names an operator may set in the shell for the documented `validate-import` example, values not stored here:
 
-The future **complete** private format v1 is defined by `schemas/private-handoff-v1.json` and the
-entrypoint's semantic checks. `handoff.json` binds approved SOP/profile/asset/
-template files by relative paths, revisions and hashes; profile JSON contains
-`verified: true` and nonempty `facts`. The template is approved caption text
-containing the verified personal LINE hyperlink exactly once, and its metadata
-includes `contact_revision`.
-Private template metadata also includes `communication`: `skill_revision: 1`,
-`language` (`th`/`en`), `brief_language`, `recipient_language`, `message_kind`
-(`initial_interest`/`follow_up`/`missing_info`), `language_evidence`, the current
-`sop_sha256`, `agency_identity_verified: true` and `claims_reviewed: true`.
-Mixed/conflicting/unknown language needs `contextual_language` plus evidence;
-there is no automatic Thai or English fallback. Outgoing copy permits only the
-verified personal LINE hyperlink and no unresolved private placeholders.
-Complete source inventory, reconciled counts,
-campaigns, crosspost steps, holds, attempts and an idle checkpoint are required.
-Raw chats, credentials, cookies and sessions are excluded. If the source export
-uses another format, write and test an explicit versioned normalization step;
-never silently discard fields, downgrade unknowns to unsent or clear holds.
+- `SOPHS_EXPECTED_HOST`
+- `SOPHS_EXPORT_SHA256`
+- `SOPHS_EXPORT_ID`
 
-For an authorized candidate, privately create `candidate.json` with `key`,
-`campaign_key`, canonical `source_url`, crosspost/campaign `aliases`,
-`source_evidence`, aware `checked_at`, verified booleans `open`, `eligible`,
-`route_verified`, `paid`, and a concrete `category` (for example `music_video`). These are evidence-backed
-attestations, not truth inferred by code. Before any UI, use the same arguments
-above with `preflight --candidate candidate.json --contact-revision REVISION`.
-This saves the prepared caption and verified asset hash in private
-`handoff-state.json`; read it privately. Prepare/read the caption **before**
-attaching the card. Compare its factual claims to the approved profile and
-original brief; hashes establish byte identity, not factual truth. Reuse only the existing authorized browser tab after
-independently verifying the browser's account, source, recipient and route.
+The script receives those values only as `--expected-host`, `--manifest-sha256`, and `--export-id`.
 
-Immediately before the final separately authorized external write, re-read the
-current contact/template revision and approved export fingerprint. Run
-`final-check` with the same candidate and current contact revision. It rechecks
-all inputs and durably reserves one `intent` before any transmission. A stale
-prepared packet or changed revision requires fresh preparation. No command
-grants external permission. This file-only tool cannot atomically lock a UI
-click: the sole browser executor must serialize the revision check and click,
-and abort if anything changes or the reserved action is delayed.
+## How it deploys and runs
 
-Immediately after the attempt, privately create `outcome.json` with returned
-`attempt_id`, `status` (`completed`, `known_unsent`, or `uncertain`), and
-`evidence`. Completed requires a verified receipt; known-unsent requires
-`transmission_started: false`. Invoke `record-result --outcome outcome.json`
-with the same private-root/host/export arguments. One atomic fsynced private
-journal stores outcome, dedup keys and checkpoint together. It does not mark
-booking or human reading. If persistence fails, stop; retain the evidence and
-reconcile the pending intent before any retry.
+Searched the git tree for a deploy or runtime manifest. Not found: `vercel.json`, `Dockerfile`, `Procfile`, `fly.toml`, `render.yaml`, `netlify.toml`, a `supabase/` directory, `.github/` workflows, `package.json`, `pyproject.toml`, and `requirements.txt`. The GitHub repo `homepageUrl` is empty. Nothing in this checkout deploys to Vercel or any other host. The Vercel response above belongs to the separate modeling-company site, not to this workflow.
 
-On resume, read this README, the private journal and current authoritative
-export. `preflight` refuses pending/uncertain writes; never delete/reset the
-journal. `record-result` can reconcile an uncertainty only with additional
-`reconciliation_evidence`, including after export expiry or asset change. It
-preserves prior outcomes and never clears an imported hold. A verified
-known-unsent retry needs new candidate `retry_review_evidence`; an updated
-complete authoritative export must also preserve the decision. Execution and
-recurring flags stay paused throughout.
+What the code shows instead: local Python CLIs on a Unix-like machine, writing JSON under a directory the caller chooses, taking `fcntl` locks. `EXPORT-MANIFEST.json` calls itself a historical sanitized baseline, not a live deployment. The phrase "actually deployed daily BYHOUR schedule" in `collector-slot.py` is the parser refusing any RRULE other than a daily `BYHOUR` list. It does not mean this repo is deployed.
 
-### Harness-specific entry and source coverage
-
-Codex alone can use the Python preflight. Optional harnesses use the same
-instruction layer, not universal runtime configuration. No
-permissions, credentials, browser login or private filesystem mounts transfer
-through a Git clone or a saved agent conversation. Keep existing permissions;
-do not enable Full Access to make this work.
-
-| Host | Entry and prerequisite | Source reviewed |
-| --- | --- | --- |
-| Codex CLI 0.163.0 | Open this repository as working directory; verify applicable instruction overrides, read root AGENTS.md and this README explicitly, then run file-only validation. Authentication and permissions are separate host checks. | [Pinned README](https://github.com/openai/codex/blob/rust-v0.163.0/README.md); parent source review also checked official [instruction](https://learn.chatgpt.com/docs/agent-configuration/agents-md), [skills](https://learn.chatgpt.com/docs/build-skills), [auth](https://learn.chatgpt.com/docs/auth), and [permission](https://learn.chatgpt.com/docs/agent-approvals-security) docs. |
-| DeepSeek Harness | Use an already authorized configured profile rooted at this checkout. Verify its instruction plugin is enabled, then explicitly read AGENTS.md/README. Do not auto-create/reset profiles or assume browser state resumes. | [Root README](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/README.md), [CLI README](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/apps/cli/README.md), [instruction plugin](https://github.com/deepseek-ai/deepseek-harness/blob/22ddee3792402c3e70ec5f86a63c3e3e895a2f60/packages/context/agent-instructions/README.md). Source package version 0.2.1-rc.3 is not proof of installed binary build. |
-| Orca 1.4.239 | Orca hosts an agent in a worktree; that agent reads instructions. Before launching/creating a worktree, audit repository and configured setup hooks because they can execute automatically. Verify selected agent, host and private-root mapping separately. | [Pinned README](https://github.com/stablyai/orca/blob/47f77cf7018ebc0d046b82c6dde31cf704909162/README.md) and [hooks/memory](https://github.com/stablyai/orca/blob/47f77cf7018ebc0d046b82c6dde31cf704909162/docs/site/content/docs/agents/hooks-memory.mdx). |
-
-Source review covered those READMEs and instruction/hook behavior; it did not
-install or execute Orca/DSH. Parent additionally reviewed DSH skill-filesystem
-and browser-use docs at the same commit: providers require activation; session
-logs do not restore browser login/profile state. Both agents support root
-instructions but loading differs; no new skill/config layer is needed here.
-A parent fresh-harness read-only test remains required before any portability
-claim. The saved Codex environment still includes other repositories; task
-scope is restricted to this repository, not configuration-level isolation.
-
-Parent's separate authorized read-only installed-metadata check found Codex
-0.163.0, DSH 0.2.1-rc.3 build `be72761ee1a6736ebcdf4f3739363b083ae53c98`,
-and Orca 1.4.239 build `31fe3c74818b63dcc8c28043f00fecd33d97f14d`.
-Those DSH/Orca builds differ from the reviewed source pins above; do not equate
-them. Installed DSH docs corroborate root instruction/skill loading, but
-effective behavior was not executed. Orca's installed `codex resume` mapping
-reopens a Codex-native session; it does not convert conversations across
-harnesses. Existing host hooks include HTTP integration; target-project hooks
-still require inspection before launch. No harness, model or browser was
-launched by those checks; machine-local sessions/auth remain separate.
-
-Private, sanitized snapshot of the working file-based casting coordinator and regression tests. This repository is a source backup and test harness, not a running casting service. It contains no credentials, connected account IDs, model materials, private conversations, client records, operational receipts, or custom-rule contents.
-
-Requires Python 3.11+ on a Unix-like system (`fcntl` is used). No third-party dependencies, network access, live account or browser is needed for tests:
-
-```sh
-python3 -m unittest discover -s scripts -p 'test_*.py'
-```
-
-The tests use temporary directories and synthetic records. All actor, recipient and long numeric source identifiers are fixtures. Historical recovery seed campaigns have been replaced with fictional examples. The relative `config/automation.example.toml` is a test fixture; it does not install, change or trigger a schedule.
-
-## Components
-
-- `hourly-checkpoint.py`: single-owner admission, checkpoints and explicit own-lease release.
-- `work_cycle.py`: atomic phase handoff, deadline checks and next scheduled reservation. A completed notification alone cannot authorize handoff.
-- `manual_collector_lease.py`: a finite one-use manual exception, requiring separately recorded human authorization and preserving normal hourly/cycle records.
-- `lead-triage.py`: bounded screening, separate review wait and action budget, with known-unsent/verified/uncertain dispositions.
-- `collector-health.py`: file-only evidence probing, source-gap accounting and recovery eligibility. Synthetic historical seeds are test examples, not leads.
-- `collector-slot.py`: file-only slot admission and one-attempt digest journal; included for recovery coverage, not permission to activate a paused platform.
-- `notification_guard.py`: daily read-only quota admission, native fallback intent and deduplicated delivery evidence. It never calls a message API or operates LINE.
-
-## Runtime boundary
-
-A separately authorized local executor supplies real machine/account context, current private rule decisions and verified recipients. Live configuration and all operational state remain outside this repository. Nothing here grants permission for outreach, submissions, account changes or paid actions. Do not point synthetic IDs at real recipients or replay test seeds against live state.
-
-Tests cover ownership conflicts, unknown guards, uncertain-send protection, terminal evidence, interrupted recovery, separate screening/review/action clocks, quota checks and duplicate delivery. Passing tests establish local behavior; they do not prove platform access, complete source coverage, delivery or human reading.
-
-See [WORKFLOW.md](WORKFLOW.md) for evidence boundaries and
-[EXPORT-MANIFEST.json](EXPORT-MANIFEST.json) for historical baseline hashes;
-use the published Git tree discovery above for the complete current package.
+Unverified: whether any desktop, cron, or agent outside this checkout currently invokes these scripts. This session did not start a scheduler, a browser, or a deploy.
